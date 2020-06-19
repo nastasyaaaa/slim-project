@@ -1,0 +1,32 @@
+{
+    "name": "nana/slim-demo",
+    "authors": [
+        {
+            "name": "nana",
+            "email": "nastyaa1212@gmail.com"
+        }
+    ],
+    "config": {
+        "sort-packages": true,
+        "process-timeout": 0
+    },
+    "require": {
+        "php": "^7.4",
+        "ext-json": "^7.4",
+        "php-di/php-di": "^6.1",
+        "slim/psr7": "^1.1",
+        "slim/slim": "^4.5",
+        "symfony/console": "^5.1"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\" : "src/"
+        }
+    },
+    "scripts": {
+        "console" : "php bin/app.php --ansi"
+    }
+}

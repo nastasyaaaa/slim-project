@@ -1,0 +1,58 @@
+version: "3.3"
+services:
+
+  gateway:
+    build:
+      context: ./gateway/docker/nginx
+    ports:
+    - "8082:8082"
+    - "8083:8083"
+
+    depends_on:
+      - frontend
+      - api
+
+  frontend:
+    build:
+      context: ./frontend/docker/nginx
+    volumes:
+      - ./frontend:/app/
+
+  api:
+    build:
+      context: ./api/docker/nginx
+    volumes:
+      - ./api:/app/
+    depends_on:
+      - api-php-fpm
+
+  api-php-fpm:
+    build:
+      context: ./api/docker/php-fpm
+    environment:
+      APP_DEBUG: 1
+      APP_ENV: dev
+    volumes:
+      - ./api:/app/
+
+  api-php-cli:
+    build:
+      context: ./api/docker/php-cli
+    environment:
+        APP_DEBUG: 1
+        APP_ENV: dev
+    volumes:
+      - ./api:/app/
+
+  postgres:
+    build:
+      context: ./api/docker/postgres
+    ports:
+      - "54321:5432"
+    environment:
+      POSTGRES_PASSWORD: "123456"
+      POSTGRES_USER: "nana"
+    volumes:
+      - ./api/docker/postgres/data:/var/lib/postgresql/data
+    depends_on:
+      - api
