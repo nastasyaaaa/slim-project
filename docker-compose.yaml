@@ -28,23 +28,34 @@ services:
 
   api-php-fpm:
     build:
-      context: ./api/docker/php-fpm
+      context: ./api/docker
+      dockerfile: ./php-fpm/Dockerfile
     environment:
       APP_DEBUG: 1
       APP_ENV: dev
+      PHP_IDE_CONFIG: serverName=API
+      DB_HOST: "api-postgres"
+      DB_USER: "nana"
+      DB_PASSWORD: "123456"
+      DB_NAME: "app"
     volumes:
       - ./api:/app/
 
   api-php-cli:
     build:
-      context: ./api/docker/php-cli
+      context: ./api/docker
+      dockerfile: ./php-cli/Dockerfile
     environment:
         APP_DEBUG: 1
         APP_ENV: dev
+        DB_HOST: "api-postgres"
+        DB_USER: "nana"
+        DB_PASSWORD: "123456"
+        DB_NAME: "app"
     volumes:
       - ./api:/app/
 
-  postgres:
+  api-postgres:
     build:
       context: ./api/docker/postgres
     ports:
@@ -52,6 +63,7 @@ services:
     environment:
       POSTGRES_PASSWORD: "123456"
       POSTGRES_USER: "nana"
+      POSTGRES_DB: "app"
     volumes:
       - ./api/docker/postgres/data:/var/lib/postgresql/data
     depends_on:

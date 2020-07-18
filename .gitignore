@@ -1,3 +1,5 @@
 api/vendor
 api/docker/postgres/data
+api/.idea
 .idea
+api/var
