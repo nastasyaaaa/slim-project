@@ -48,4 +48,9 @@ class Status
     {
         return $this->status === self::WAIT;
     }
+
+    public function getValue()
+    {
+        return $this->status;
+    }
 }

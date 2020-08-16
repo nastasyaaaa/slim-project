@@ -1,5 +1,6 @@
 FROM php:7.4-cli-alpine
 
+
 # install xdebug
 RUN apk update && apk add autoconf make g++ \
     && pecl install xdebug \
@@ -20,13 +21,14 @@ RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 COPY ./php/conf.d /usr/local/etc/php/conf.d
 COPY ./php-cli/conf.d /usr/local/etc/php/conf.d
 
-WORKDIR /app
-
 # install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer --quiet \
-    && composer global require hirak/prestissimo --no-plugins --no-scripts \
-    && rm -rf /root/.composer/cache
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer --quiet
 
 # add user
 RUN adduser -D -u 1000 nana
 USER nana
+
+WORKDIR /app
+
+RUN composer global require hirak/prestissimo --no-plugins --no-scripts \
+    && rm -rf /home/nana/.composer/cache

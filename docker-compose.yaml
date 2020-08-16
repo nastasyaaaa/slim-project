@@ -5,8 +5,9 @@ services:
     build:
       context: ./gateway/docker/nginx
     ports:
-    - "8082:8082"
-    - "8083:8083"
+      - "8082:8082"
+      - "8083:8083"
+      - "8025:8025"
 
     depends_on:
       - frontend
@@ -38,6 +39,12 @@ services:
       DB_USER: "nana"
       DB_PASSWORD: "123456"
       DB_NAME: "app"
+      MAILER_HOST: "mailer"
+      MAILER_PORT: 1025
+      MAILER_USERNAME: "app"
+      MAILER_PASSWORD: "secret"
+      MAILER_ENCRYPTION: "tcp"
+      MAILER_FROM_EMAIL : "mail@app.test"
     volumes:
       - ./api:/app/
 
@@ -46,12 +53,23 @@ services:
       context: ./api/docker
       dockerfile: ./php-cli/Dockerfile
     environment:
-        APP_DEBUG: 1
-        APP_ENV: dev
-        DB_HOST: "api-postgres"
-        DB_USER: "nana"
-        DB_PASSWORD: "123456"
-        DB_NAME: "app"
+      APP_DEBUG: 1
+      APP_ENV: dev
+      DB_HOST: "api-postgres"
+      DB_USER: "nana"
+      DB_PASSWORD: "123456"
+      DB_NAME: "app"
+#      MAILER_HOST: "smtp.mailtrap.io"
+#      MAILER_PORT: 25
+#      MAILER_USERNAME: "b3dedfc298c893"
+#      MAILER_PASSWORD: "568ed55f250b42"
+#      MAILER_ENCRYPTION: "tls"
+      MAILER_HOST: "mailer"
+      MAILER_PORT: 1025
+      MAILER_USERNAME: "b3dedfc298c893"
+      MAILER_PASSWORD: "568ed55f250b42"
+      MAILER_ENCRYPTION: "tcp"
+      MAILER_FROM_EMAIL : "mail@app.test"
     volumes:
       - ./api:/app/
 
@@ -68,3 +86,6 @@ services:
       - ./api/docker/postgres/data:/var/lib/postgresql/data
     depends_on:
       - api
+
+  mailer:
+    image: mailhog/mailhog

@@ -20,5 +20,5 @@ COPY ./php-fpm/conf.d /usr/local/etc/php/conf.d
 COPY ./php-fpm/entrypoint.sh /usr/local/bin/docker-php-entrypoint
 RUN chmod +x /usr/local/bin/docker-php-entrypoint
 
-WORKDIR /cli
+WORKDIR /app
 

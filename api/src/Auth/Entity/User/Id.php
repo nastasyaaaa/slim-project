@@ -25,4 +25,9 @@ class Id
     {
         return new static(Uuid::uuid4()->toString());
     }
+
+    public function __toString()
+    {
+        return $this->getValue();
+    }
 }

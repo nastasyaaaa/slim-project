@@ -29,4 +29,9 @@ class Email
     {
         return $this->value === $email->value;
     }
+
+    public function __toString()
+    {
+        return $this->getValue();
+    }
 }
