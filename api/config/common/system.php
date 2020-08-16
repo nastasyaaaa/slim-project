@@ -1,10 +1,16 @@
 <?php
 
+use App\Flusher;
+use App\IFlusher;
+use Slim\Psr7\Factory\ResponseFactory;
+use Psr\Http\Message\ResponseFactoryInterface;
+
 return [
+    ResponseFactoryInterface::class => Di\get(ResponseFactory::class),
+    IFlusher::class => Flusher::class,
+
     'config' => [
         'debug' => (bool)getenv('APP_DEBUG'),
-        'env' => getenv('APP_ENV'),
+        'env' => getenv('APP_ENV') ?: 'prod',
     ],
-    \Psr\Http\Message\ResponseFactoryInterface::class => Di\get(\Slim\Psr7\Factory\ResponseFactory::class),
-    \App\IFlusher::class => \App\Flusher::class,
 ];

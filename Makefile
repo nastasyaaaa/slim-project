@@ -18,7 +18,7 @@ api-clear:
 	docker run --rm -v ${PWD}/api:/app -w /app alpine sh -c 'rm -rf var/cache/* var/log/*'
 
 api-permissions:
-	docker run --rm -v ${PWD}/api:/app -w /app alpine sh -c 'chmod -R 777 var/cache var/log'
+	docker run --rm -v ${PWD}/api:/app -w /app alpine sh -c 'chmod -R 777 var/cache var/log var/doctrine/'
 
 
 # Tests
