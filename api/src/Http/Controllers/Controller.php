@@ -26,8 +26,7 @@ abstract class Controller
 
     protected function jsonResponse($data, int $code = 200, $phrase = "")
     {
-        $response = $this->factory->createResponse($code, $phrase);
-        $response->getBody()->write(json_encode($data, JSON_THROW_ON_ERROR, 512));
+        $response = $this->response(json_encode($data, JSON_THROW_ON_ERROR, 512), $code, $phrase);
 
         return $response->withHeader('Content-Type', 'application/json');
     }
