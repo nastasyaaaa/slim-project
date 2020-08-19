@@ -2,6 +2,7 @@
 
 use Psr\Container\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Console\Commands\MailerCheckCommand;
 use App\Console\Commands\FixturesLoadCommand;
 
 return [
@@ -20,7 +21,7 @@ return [
             [
                 'commands' => [
                     FixturesLoadCommand::class,
-                    \App\Console\Commands\MailerCheckCommand::class,
+                    MailerCheckCommand::class,
                 ],
 
                 'fixtures_paths' => [

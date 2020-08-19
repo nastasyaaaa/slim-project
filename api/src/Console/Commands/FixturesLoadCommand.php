@@ -51,7 +51,7 @@ class FixturesLoadCommand extends Command
             $output->writeln($message);
         });
 
-        $executor->execute($loader->getFixtures(), true);
+        $executor->execute($loader->getFixtures());
 
         $output->writeln('<info>Fixtures loaded.</info>');
 

@@ -31,7 +31,6 @@ return [
             'debug' => (bool)getenv('APP_DEBUG'),
             'file' => null, //depends on env
             'stderr' => true,
-            'telegram' => true,
         ]
     ]
 ];
