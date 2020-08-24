@@ -13,5 +13,16 @@ return [
         $mailer = $container->get(Swift_Mailer::class);
 
         return new \App\Auth\Service\JoinConfirmationSender($mailer, $config['from']);
-    }
+    },
+    \App\Auth\Service\Tokenizer::class => static function (ContainerInterface $container) {
+        $interval = $container->get('config')['auth']['default_tokenizer_interval'];
+
+        return new \App\Auth\Service\Tokenizer(new DateInterval($interval));
+    },
+
+    'config' => [
+        'auth' => [
+            'default_tokenizer_interval' => 'P2D',
+        ]
+    ]
 ];

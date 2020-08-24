@@ -22,6 +22,10 @@ api-permissions:
 
 
 # Tests
+test: api-test api-fixtures
+test-functional: api-test-functional api-fixtures
+test-unit: api-test-unit
+
 api-test:
 	docker-compose run --rm api-php-cli composer test
 api-test-unit:
@@ -32,6 +36,7 @@ api-test-unit-coverage:
 	 docker-compose run --rm api-php-cli composer test -- --filter=Unit --coverage-html var/coverage
 api-test-functional-coverage:
 	 docker-compose run --rm api-php-cli composer test -- --filter=Functional --coverage-html var/coverage
+
 
 # Migrations
 api-migration-diff:

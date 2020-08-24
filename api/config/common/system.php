@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 
 return [
     ResponseFactoryInterface::class => Di\get(ResponseFactory::class),
-    IFlusher::class => Flusher::class,
+    IFlusher::class => Di\get(Flusher::class),
 
     'config' => [
         'debug' => (bool)getenv('APP_DEBUG'),

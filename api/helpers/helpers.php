@@ -10,3 +10,11 @@ if (!function_exists('resolve')) {
         return $container->get($abstract);
     }
 }
+
+if (!function_exists('dd')) {
+
+    function dd($smt)
+    {
+        var_dump($smt); die();
+    }
+}

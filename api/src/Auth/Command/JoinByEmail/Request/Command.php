@@ -1,17 +1,24 @@
 <?php
 
-
 namespace App\Auth\Command\JoinByEmail\Request;
 
-
-use App\Auth\Entity\User\Email;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
-    public Email $email;
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Email()
+     */
+    public string $email = "";
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Length(min=6, allowEmptyString=true)
+     */
     public string $password = "";
 
-    public function __construct(Email $email, string $password)
+    public function __construct(string $email, string $password)
     {
         $this->email = $email;
         $this->password = $password;

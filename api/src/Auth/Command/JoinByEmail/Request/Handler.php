@@ -2,22 +2,29 @@
 
 namespace App\Auth\Command\JoinByEmail\Request;
 
+use App\IFlusher;
 use App\Auth\Entity\User\Id;
 use App\Auth\Entity\User\User;
 use App\Auth\Service\Tokenizer;
+use App\Auth\Entity\User\Email;
 use App\Auth\Service\PasswordHasher;
 use App\Auth\Service\IJoinConfirmationSender;
+use App\Auth\Entity\User\Repository\IUserRepository;
 
 class Handler
 {
-    private $users;
+    private IUserRepository $users;
     private PasswordHasher $hasher;
     private Tokenizer $tokenizer;
-    private $flusher;
+    private IFlusher $flusher;
     private IJoinConfirmationSender $sender;
 
 
-    public function __construct($users, PasswordHasher $hasher, Tokenizer $tokenizer, $flusher, IJoinConfirmationSender $sender)
+    public function __construct(IUserRepository $users,
+                                PasswordHasher $hasher,
+                                Tokenizer $tokenizer,
+                                IFlusher $flusher,
+                                IJoinConfirmationSender $sender)
     {
         $this->users = $users;
         $this->hasher = $hasher;
@@ -29,7 +36,7 @@ class Handler
 
     public function handle(Command $command): void
     {
-        $email = $command->email;
+        $email = new Email($command->email);
 
         if ($this->users->hasByEmail($email)) {
             throw new \DomainException('User with this email already exists.');

@@ -1,8 +1,7 @@
 <?php
 
-namespace Functional;
+namespace Test\Functional;
 
-use Test\Functional\WebTestCase;
 
 class NotFoundTest extends WebTestCase
 {

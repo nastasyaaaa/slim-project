@@ -1,0 +1,31 @@
+<?php
+
+namespace Test\Functional;
+
+use GuzzleHttp\Client;
+
+class MailerClient
+{
+    private Client $client;
+
+    public function __construct()
+    {
+        $this->client = new Client([
+            'base_uri' => 'http://mailer:8025'
+        ]);
+    }
+
+    public function hasEmailSentTo(string $to): bool
+    {
+        $response = $this->client->get('/api/v2/search?kind=to&query=' . urlencode($to));
+
+        $data = json_decode((string)$response->getBody(), true, 512,JSON_THROW_ON_ERROR);
+
+        return $data['total'] > 0;
+    }
+
+    public function clear()
+    {
+        return $this->client->delete('/api/v1/messages');
+    }
+}
