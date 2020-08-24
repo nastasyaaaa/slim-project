@@ -36,7 +36,7 @@ class ChangePasswordTest extends TestCase
         $user = (new UserBuilder())->active()->buildByEmail();
 
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Old password is incorrect.');
+        $this->expectExceptionMessage('Incorrect current password.');
 
         $user->changePassword(
             'old-password',
@@ -51,7 +51,7 @@ class ChangePasswordTest extends TestCase
 
         $user = (new UserBuilder())->active()->buildByNetwork();
 
-        $this->expectExceptionMessage('User doesn`t have old password.');
+        $this->expectExceptionMessage('User does not have an old password.');
         $this->expectException(\DomainException::class);
 
         $user->changePassword(

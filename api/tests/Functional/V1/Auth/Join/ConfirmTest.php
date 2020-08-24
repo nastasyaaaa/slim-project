@@ -38,7 +38,20 @@ class ConfirmTest extends WebTestCase
         self::assertEquals(409, $response->getStatusCode());
         self::assertJson($body = (string)$response->getBody());
         self::assertArraySubset([
-            'message' => 'Token expired.'
+            'message' => 'Token is expired.'
+        ], json_decode($body, true, 512, JSON_THROW_ON_ERROR));
+    }
+
+    public function testExpiredRU()
+    {
+        $response = $this->app()->handle(self::json('POST', '/v1/auth/confirm', [
+            'token' => ConfirmFixture::EXPIRED
+        ])->withHeader('Accept-Language', 'ru'));
+
+        self::assertEquals(409, $response->getStatusCode());
+        self::assertJson($body = (string)$response->getBody());
+        self::assertArraySubset([
+            'message' => 'Время действия токена истекло.'
         ], json_decode($body, true, 512, JSON_THROW_ON_ERROR));
     }
 
@@ -51,9 +64,21 @@ class ConfirmTest extends WebTestCase
         self::assertEquals(409, $response->getStatusCode());
         self::assertJson($body = (string)$response->getBody());
         self::assertArraySubset([
-            'message' => 'User not found'
+            'message' => 'User is not found.'
         ], json_decode($body, true, 512, JSON_THROW_ON_ERROR));
+    }
 
+    public function testUserNotFoundRU()
+    {
+        $response = $this->app()->handle(self::json('POST', '/v1/auth/confirm', [
+            'token' => (string)Id::generate()
+        ])->withHeader('Accept-Language', 'ru'));
+
+        self::assertEquals(409, $response->getStatusCode());
+        self::assertJson($body = (string)$response->getBody());
+        self::assertArraySubset([
+            'message' => 'Пользователь не найден.'
+        ], json_decode($body, true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testNotValidTokenUUID()

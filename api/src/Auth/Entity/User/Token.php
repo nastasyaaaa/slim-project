@@ -43,7 +43,7 @@ class Token
     public function validate(string $token, \DateTimeImmutable $date): void
     {
         if ($this->isExpiredTo($date)) {
-            throw new \DomainException('Token expired.');
+            throw new \DomainException('Token is expired.');
         }
 
         if (!$this->isEqualTo($token)) {

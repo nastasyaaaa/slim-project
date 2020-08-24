@@ -87,7 +87,7 @@ class ConfirmTest extends TestCase
         self::assertFalse($user->isActive());
 
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Token expired.');
+        $this->expectExceptionMessage('Token is expired.');
 
         $user->confirmJoin(
             $token->getValue(),

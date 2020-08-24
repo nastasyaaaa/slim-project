@@ -25,7 +25,7 @@ class RemoveUserTest extends TestCase
             ->buildByEmail();
 
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Can`t remove active user.');
+        $this->expectExceptionMessage('Unable to remove active user.');
 
         $user->remove();
     }

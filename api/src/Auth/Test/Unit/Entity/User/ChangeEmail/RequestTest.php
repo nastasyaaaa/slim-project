@@ -62,7 +62,7 @@ class RequestTest extends TestCase
         );
 
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Change email already requested.');
+        $this->expectExceptionMessage('Changing is already requested.');
 
         $user->requestEmailChanging(
             $this->tokenizer->generate($date),
@@ -80,7 +80,7 @@ class RequestTest extends TestCase
         $date = new \DateTimeImmutable();
 
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('User is inactive.');
+        $this->expectExceptionMessage('User is not active.');
 
         $user->requestEmailChanging(
             $this->tokenizer->generate($date),
@@ -99,7 +99,7 @@ class RequestTest extends TestCase
         $date = new \DateTimeImmutable();
 
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Emails are the same.');
+        $this->expectExceptionMessage('Email is already same.');
 
         $user->requestEmailChanging(
             $this->tokenizer->generate($date),

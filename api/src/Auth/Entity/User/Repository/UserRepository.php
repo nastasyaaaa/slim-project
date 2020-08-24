@@ -52,7 +52,7 @@ class UserRepository implements IUserRepository
         $user = $this->repository->find($id->getValue());
 
         if (!$user) {
-            throw new DomainException('User not found.');
+            throw new DomainException('User is not found.');
         }
 
         /** @var User $user */
@@ -66,7 +66,7 @@ class UserRepository implements IUserRepository
         ]);
 
         if (!$user) {
-            throw new DomainException('User not found.');
+            throw new DomainException('User is not found.');
         }
 
         /** @var User $user */

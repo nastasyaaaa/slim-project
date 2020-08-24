@@ -156,7 +156,7 @@ class User
     public function remove(): void
     {
         if (!$this->isWait()) {
-            throw new DomainException('Can`t remove active user.');
+            throw new DomainException('Unable to remove active user.');
         }
     }
 
@@ -205,11 +205,11 @@ class User
     public function requestPasswordReset(Token $token, DateTimeImmutable $date): void
     {
         if (!$this->isActive()) {
-            throw new DomainException('User is inactive.');
+            throw new DomainException('User is not active.');
         }
 
         if ($this->passwordResetToken !== null && !$this->passwordResetToken->isExpiredTo($date)) {
-            throw new DomainException('Resetting already requested.');
+            throw new DomainException('Resetting is already requested.');
         }
 
         $this->passwordResetToken = $token;
@@ -235,11 +235,11 @@ class User
     public function changePassword(string $current, string $new, PasswordHasher $hasher): void
     {
         if ($this->hash === null) {
-            throw new DomainException('User doesn`t have old password.');
+            throw new DomainException('User does not have an old password.');
         }
 
         if (!$hasher->validate($this->hash, $current)) {
-            throw new DomainException('Old password is incorrect.');
+            throw new DomainException('Incorrect current password.');
         }
 
         $this->hash = $hasher->hash($new);
@@ -248,15 +248,15 @@ class User
     public function requestEmailChanging(Token $token, DateTimeImmutable $date, Email $email): void
     {
         if (!$this->isActive()) {
-            throw new DomainException('User is inactive.');
+            throw new DomainException('User is not active.');
         }
 
         if ($this->email->isEqualTo($email)) {
-            throw new DomainException('Emails are the same.');
+            throw new DomainException('Email is already same.');
         }
 
         if ($this->newEmailToken !== null && !$this->newEmailToken->isExpiredTo($date)) {
-            throw new DomainException('Change email already requested.');
+            throw new DomainException('Changing is already requested.');
         }
 
         $this->newEmailToken = $token;
@@ -266,7 +266,7 @@ class User
     public function confirmChangeEmail(string $token, DateTimeImmutable $date): void
     {
         if ($this->newEmailToken === null || $this->newEmail === null) {
-            throw new DomainException('Email change not requested.');
+            throw new DomainException('Changing is not requested.');
         }
 
         $this->newEmailToken->validate($token, $date);
@@ -278,7 +278,7 @@ class User
     public function changeRole(Role $role): void
     {
         if ($this->role->isEqualTo($role)) {
-            throw new DomainException('Roles are the same.');
+            throw new DomainException('Role is already same.');
         }
 
         $this->role = $role;

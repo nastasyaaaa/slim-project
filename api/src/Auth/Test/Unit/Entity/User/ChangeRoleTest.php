@@ -28,7 +28,7 @@ class ChangeRoleTest extends TestCase
             ->buildByEmail();
 
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Roles are the same.');
+        $this->expectExceptionMessage('Role is already same.');
 
         $user->changeRole(
             Role::user()

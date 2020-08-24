@@ -59,7 +59,7 @@ class ConfirmTest extends TestCase
         );
 
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Token expired.');
+        $this->expectExceptionMessage('Token is expired.');
 
         $user->confirmChangeEmail($token->getValue(), $date->modify('+3 days'));
     }
@@ -90,7 +90,7 @@ class ConfirmTest extends TestCase
         $date = new \DateTimeImmutable();
 
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Email change not requested.');
+        $this->expectExceptionMessage('Changing is not requested.');
 
         $user->confirmChangeEmail($this->tokenizer->generate($date)->getValue(), $date);
     }

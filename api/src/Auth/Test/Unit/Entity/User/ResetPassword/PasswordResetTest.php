@@ -90,7 +90,7 @@ class PasswordResetTest extends TestCase
         );
 
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Token expired.');
+        $this->expectExceptionMessage('Token is expired.');
 
         $this->user->resetPassword(
             $token->getValue(),

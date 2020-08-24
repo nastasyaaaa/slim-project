@@ -91,6 +91,45 @@ class RequestTest extends WebTestCase
         ], json_decode((string) $response->getBody(), true, 512,JSON_THROW_ON_ERROR));
     }
 
+    public function testEmptyRuLang()
+    {
+        $email = '';
+        $password = '';
+
+        $response = $this->app()->handle(self::json('POST', '/v1/auth/join', [
+            'email' => $email,
+            'password' => $password
+        ])->withHeader('Accept-Language', 'ru'));
+
+        self::assertEquals(422, $response->getStatusCode());
+        self::assertArraySubset([
+            'errors' => [
+                'email' => 'Значение не должно быть пустым.',
+                'password' => 'Значение не должно быть пустым.',
+
+            ]
+        ], json_decode((string) $response->getBody(), true, 512,JSON_THROW_ON_ERROR));
+    }
+
+    public function testInvalidEmailRuLang()
+    {
+        $email = 'invalid';
+        $password = 'password';
+
+        $response = $this->app()->handle(self::json('POST', '/v1/auth/join', [
+            'email' => $email,
+            'password' => $password
+        ])->withHeader('Accept-Language', 'ru'));
+
+        self::assertEquals(422, $response->getStatusCode());
+        self::assertArraySubset([
+            'errors' => [
+                'email' => 'Значение адреса электронной почты недопустимо.',
+
+            ]
+        ], json_decode((string) $response->getBody(), true, 512,JSON_THROW_ON_ERROR));
+    }
+
     public function testTooShortPassword()
     {
         $email = 'user@app.test';

@@ -22,7 +22,7 @@ class Handler
     public function handle(Command $command)
     {
         if (!($user = $this->users->findByPasswordResetToken($command->token))) {
-            throw new \DomainException('User not found.');
+            throw new \DomainException('User is not found.');
         }
         
         $user->resetPassword(

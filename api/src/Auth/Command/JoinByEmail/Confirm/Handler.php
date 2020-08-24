@@ -19,7 +19,7 @@ class Handler
     public function handle(Command $command): void
     {
         if (!$user = $this->userRepository->findByConfirmToken($command->token)) {
-            throw new \DomainException('User not found');
+            throw new \DomainException('User is not found.');
         }
 
         $user->confirmJoin($command->token, new \DateTimeImmutable());

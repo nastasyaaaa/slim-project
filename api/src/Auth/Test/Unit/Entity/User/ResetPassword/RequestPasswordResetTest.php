@@ -45,7 +45,7 @@ class RequestPasswordResetTest extends TestCase
         );
 
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Resetting already requested.');
+        $this->expectExceptionMessage('Resetting is already requested.');
 
         $user->requestPasswordReset(
             $token,
@@ -93,7 +93,7 @@ class RequestPasswordResetTest extends TestCase
         $date = new \DateTimeImmutable();
 
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('User is inactive.');
+        $this->expectExceptionMessage('User is not active.');
 
         $user->requestPasswordReset(
             $tokenizer->generate($date),
