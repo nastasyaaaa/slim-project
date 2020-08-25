@@ -1,2 +1,4 @@
 .idea/
 vendor/
+var/
+docker/postgres/data
