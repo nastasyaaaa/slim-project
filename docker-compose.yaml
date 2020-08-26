@@ -99,13 +99,15 @@ services:
     volumes:
       - ./frontend:/app
 
-# 3000 port, see gateway
+  # 3000 port, see gateway
   frontend-node-server:
     build:
       context: ./frontend/docker/node
     volumes:
       - ./frontend:/app
-    command: yarn start
+
+    # .ready file is created after frontend-yarn-install command is done, so we do yarn start only when all dependencies are installed
+    command: sh -c "until [ -f .ready ] ; do sleep 1 ; done && yarn start"
     tty: true
 
   # services

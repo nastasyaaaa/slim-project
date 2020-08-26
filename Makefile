@@ -1,8 +1,7 @@
 init: down \
-	api-clear \
+	api-clear frontend-clear \
 	pull build up \
-	api-init \
-	frontend-init
+	api-init frontend-init
 up:
 	docker-compose up -d
 up-not-demon:
@@ -56,7 +55,11 @@ api-fixtures:
 
 
 # frontend
-frontend-init: frontend-yarn-install
+frontend-init: frontend-yarn-install frontend-ready
 
 frontend-yarn-install:
 	docker-compose run --rm frontend-node-cli yarn install
+frontend-ready:
+	docker-compose run --rm frontend-node-cli touch .ready
+frontend-clear:
+	docker-compose run --rm frontend-node-cli rm -rf .ready build
