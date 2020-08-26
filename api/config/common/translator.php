@@ -45,12 +45,14 @@ return [
     'config' => [
         'translator' => [
             'resources' => [
+                // validation errors
                 [
                     'xlf',
                     __DIR__ . '/../../vendor/symfony/validator/Resources/translations/validators.ru.xlf',
                     'ru',
                     'validators'
                 ],
+                // app exceptions messages
                 [
                     'php',
                     __DIR__ . '/../../translations/exceptions.ru.php',
