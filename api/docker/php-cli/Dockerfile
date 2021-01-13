@@ -28,12 +28,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --fil
 COPY ./php-cli/wait-for-it.sh /usr/local/bin/wait-for-it
 RUN chmod 555 /usr/local/bin/wait-for-it
 
-
 # add user
 RUN adduser -D -u 1000 nana
 USER nana
 
 WORKDIR /app
 
-RUN composer global require hirak/prestissimo --no-plugins --no-scripts \
-    && rm -rf /home/nana/.composer/cache
+RUN rm -rf /home/nana/.composer/cache
