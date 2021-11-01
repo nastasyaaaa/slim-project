@@ -1,20 +1,26 @@
 pipeline {
     agent any
+    options {
+        timestamps()
+    }
+    environment {
+        CI = 'true'
+    }
     stages {
-        stage("One") {
+        stage("Init") {
             steps {
-                sh "sleep 1"
+                sh "make init"
             }
         }
-        stage("Two") {
+        stage("Down") {
             steps {
-                sh "sleep 1"
+                sh "make down"
             }
         }
-        stage("Three") {
-            steps {
-                sh "sleep 1"
-            }
+    }
+    post {
+        always {
+            sh "make down || true"
         }
     }
 }
