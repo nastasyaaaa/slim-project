@@ -5,8 +5,11 @@ namespace Test\Functional;
 use Slim\App;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Slim\Psr7\Factory\ResponseFactory;
+use Psr\Http\Message\ResponseInterface;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\ORM\EntityManagerInterface;
+use Fig\Http\Message\StatusCodeInterface;
 use Slim\Psr7\Factory\ServerRequestFactory;
 use Psr\Http\Message\ServerRequestInterface;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
@@ -77,6 +80,11 @@ class WebTestCase extends TestCase
     protected static function request(string $method, string $path): ServerRequestInterface
     {
         return (new ServerRequestFactory())->createServerRequest($method, $path);
+    }
+
+    protected static function response(int $code = StatusCodeInterface::STATUS_OK): ResponseInterface
+    {
+        return (new ResponseFactory())->createResponse($code);
     }
 
     private function container(): ContainerInterface

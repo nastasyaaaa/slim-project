@@ -15,6 +15,7 @@ if (!function_exists('dd')) {
 
     function dd($smt)
     {
+        echo "<pre/>";
         var_dump($smt); die();
     }
 }
