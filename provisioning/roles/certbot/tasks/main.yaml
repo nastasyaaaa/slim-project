@@ -1,0 +1,52 @@
+---
+- name: Update apt packages
+  become: true
+  apt:
+    update_cache: yes
+
+- name: Add first key for debian repository
+  become: true
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 04EE7237B7D453EC
+
+- name: Add second key for debian repository
+  become: true
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 648ACFD622F3D138
+
+- name: Add Certbot repository
+  become: true
+  apt_repository:
+    repo: 'deb https://ftp.debian.org/debian buster-backports main'
+    state: present
+    filename: buster-backports
+    update_cache: true
+
+- name: Install Certbot
+  become: true
+  apt:
+    name: certbot
+    state: present
+    default_release: buster-backports
+    update_cache: true
+
+- name: Copy Certbot configuration
+  become: true
+  copy:
+    src: files/cli.ini
+    dest: /etc/letsencrypt/cli.ini
+    owner: ubuntu
+    group: ubuntu
+    mode: 0644
+
+- name: Remove useless packages
+  become: true
+  apt:
+    autoclean: true
+
+- name: Remove useless dependencies
+  become: true
+  apt:
+    autoremove: true

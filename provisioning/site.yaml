@@ -1,0 +1,8 @@
+---
+- name: Provisioning site
+  hosts: site
+  remote_user: ubuntu
+  roles:
+    - docker
+    - certbot
+    - site

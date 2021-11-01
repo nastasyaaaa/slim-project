@@ -1,0 +1,4 @@
+certbot_email: admin@nana.sbs
+certbot_hosts:
+    - auction.nana.sbs
+    - api.auction.nana.sbs

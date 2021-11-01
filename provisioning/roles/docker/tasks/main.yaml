@@ -1,0 +1,75 @@
+---
+- name: Update apt packages
+  become: true
+  apt:
+    update_cache: yes
+
+- name: Install dependencies
+  become: true
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    state: present
+    update_cache: yes
+
+- name: Add GPG key
+  become: true
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Verify fingerprint
+  become: true
+  apt_key:
+    id: 0EBFCD88
+    state: present
+
+- name: Setup the repository
+  become: true
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
+    state: present
+    filename: docker
+    update_cache: yes
+
+- name: Update apt packages
+  become: true
+  apt:
+    update_cache: yes
+
+- name: Install Docker
+  become: true
+  apt:
+    name: docker-ce
+    state: present
+    update_cache: yes
+  notify: Start docker on boot
+
+- name: Install Docker-compose
+  become: true
+  get_url:
+    url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-{{ ansible_system }}-{{ ansible_userspace_architecture }}
+    dest: /usr/local/bin/docker-compose
+    group: docker
+    mode: 'u+x,g+x'
+
+- name: Set periodic docker prune
+  become: true
+  cron:
+    name: docker-prune
+    job: 'docker system prune -f --filter "until=$((30*24))h"'
+    minute: '0'
+    hour: '1'
+
+- name: Remove useless packages
+  become: true
+  apt:
+    autoclean: true
+
+- name: Remove useless dependencies
+  become: true
+  apt:
+    autoremove: true
