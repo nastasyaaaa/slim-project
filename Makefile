@@ -1,6 +1,6 @@
 init: down \
 	api-clear frontend-clear \
-	pull build up \
+	docker-build up \
 	api-init frontend-init
 up:
 	docker-compose up -d
@@ -8,10 +8,8 @@ up-not-demon:
 	docker-compose up
 down:
 	docker-compose down --remove-orphans
-pull:
-	docker-compose pull
-build:
-	docker-compose build
+docker-build:
+	docker-compose build --pull
 
 api-init: api-permissions api-composer-install api-wait-db api-migration-migrate api-fixtures
 
@@ -26,6 +24,33 @@ api-permissions:
 
 api-wait-db:
 	docker-compose run --rm api-php-cli wait-for-it api-postgres:5432 -t 30
+
+build: build-gateway build-api build-frontend
+
+build-gateway:
+	docker --log-level=debug buildx build --platform linux/x86_64 --pull --file=gateway/docker/production/nginx/Dockerfile --tag=${REGISTRY}/auction-gateway:${IMAGE_TAG} gateway/docker
+build-api:
+	docker --log-level=debug buildx build --platform linux/x86_64 --pull --file=api/docker/production/nginx/Dockerfile --tag=${REGISTRY}/auction-api:${IMAGE_TAG} api
+	docker --log-level=debug buildx build --platform linux/x86_64 --pull --file=api/docker/production/php-fpm/Dockerfile --tag=${REGISTRY}/auction-api-php-fpm:${IMAGE_TAG} api
+	docker --log-level=debug buildx build --platform linux/x86_64 --pull --file=api/docker/production/php-cli/Dockerfile --tag=${REGISTRY}/auction-api-php-cli:${IMAGE_TAG} api
+	docker --log-level=debug buildx build --platform linux/x86_64 --pull --file=api/docker/production/postgres/Dockerfile --tag=${REGISTRY}/auction-api-postgres:${IMAGE_TAG} api
+build-frontend:
+	docker --log-level=debug buildx build --platform linux/x86_64 --pull --file=frontend/docker/production/nginx/Dockerfile --tag=${REGISTRY}/auction-frontend:${IMAGE_TAG} frontend
+
+try-build:
+	REGISTRY=localhost IMAGE_TAG=0 make build
+
+push: push-gateway push-api push-frontend
+
+push-gateway:
+	docker push ${REGISTRY}/auction-gateway:${IMAGE_TAG}
+push-api:
+	docker push ${REGISTRY}/auction-api:${IMAGE_TAG}
+	docker push ${REGISTRY}/auction-api-php-fpm:${IMAGE_TAG}
+	docker push ${REGISTRY}/auction-api-php-cli:${IMAGE_TAG}
+	docker push ${REGISTRY}/auction-api-postgres:${IMAGE_TAG}
+push-frontend:
+	docker push ${REGISTRY}/auction-frontend:${IMAGE_TAG}
 
 # Tests
 test: api-test api-fixtures
@@ -63,3 +88,15 @@ frontend-ready:
 	docker-compose run --rm frontend-node-cli touch .ready
 frontend-clear:
 	docker-compose run --rm frontend-node-cli rm -rf .ready build
+
+deploy:
+	ssh deploy@${PROD_HOST} -p ${PROD_SSH_PORT} 'rm -rf site_${BUILD_NUMBER}'
+	ssh deploy@${PROD_HOST} -p ${PROD_SSH_PORT} 'mkdir site_${BUILD_NUMBER}'
+	scp -P ${PROD_SSH_PORT} docker-compose-production.yaml deploy@${PROD_HOST}:site_${BUILD_NUMBER}/docker-compose.yaml
+	ssh deploy@${PROD_HOST} -p ${PROD_SSH_PORT} 'cd site_${BUILD_NUMBER} && echo "COMPOSE_PROJECT_NAME=auction" >> .env'
+	ssh deploy@${PROD_HOST} -p ${PROD_SSH_PORT} 'cd site_${BUILD_NUMBER} && echo "REGISTRY=${REGISTRY}" >> .env'
+	ssh deploy@${PROD_HOST} -p ${PROD_SSH_PORT} 'cd site_${BUILD_NUMBER} && echo "IMAGE_TAG=${IMAGE_TAG}" >> .env'
+	ssh deploy@${PROD_HOST} -p ${PROD_SSH_PORT} 'cd site_${BUILD_NUMBER} && docker-compose pull'
+	ssh deploy@${PROD_HOST} -p ${PROD_SSH_PORT} 'cd site_${BUILD_NUMBER} && docker-compose up --build --remove-orphans -d'
+	ssh deploy@${PROD_HOST} -p ${PROD_SSH_PORT} 'rm -f site'
+	ssh deploy@${PROD_HOST} -p ${PROD_SSH_PORT} 'ln -sr site_${BUILD_NUMBER} site'

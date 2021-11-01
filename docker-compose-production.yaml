@@ -1,0 +1,54 @@
+version: "3.7"
+services:
+
+  gateway:
+    image: ${REGISTRY}/auction-gateway:${IMAGE_TAG}
+    restart: always
+
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/html:/var/www/html:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+      - api
+
+  # api
+
+  api:
+    image: ${REGISTRY}/auction-api:${IMAGE_TAG}
+    restart: always
+    depends_on:
+      - api-php-fpm
+
+  api-php-fpm:
+    image: ${REGISTRY}/auction-api-php-fpm:${IMAGE_TAG}
+    restart: always
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: 0
+
+#  api-php-cli:
+#    image: ${REGISTRY}/auction-api-php-cli:${IMAGE_TAG}
+#    environment:
+#      APP_ENV: prod
+#      APP_DEBUG: 0
+
+  api-postgres:
+    image: ${REGISTRY}/auction-api-postgres:${IMAGE_TAG}
+    environment:
+      POSTGRES_PASSWORD: "123456"
+      POSTGRES_USER: "nana"
+      POSTGRES_DB: "app"
+    ports:
+        - "5432:5432"
+    depends_on:
+      - api
+
+    #  frontend
+
+  frontend:
+    image: ${REGISTRY}/auction-frontend:${IMAGE_TAG}
+    restart: always

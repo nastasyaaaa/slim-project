@@ -3,7 +3,8 @@ services:
 
   gateway:
     build:
-      context: ./gateway/docker/nginx
+      context: ./gateway/docker
+      dockerfile: development/nginx/Dockerfile
     ports:
       - "8082:8082"
       - "8083:8083"
@@ -14,10 +15,10 @@ services:
       - api
 
   # api
-
   api:
     build:
-      context: ./api/docker/nginx
+      context: ./api/docker
+      dockerfile: development/nginx/Dockerfile
     volumes:
       - ./api:/app/
     depends_on:
@@ -26,7 +27,7 @@ services:
   api-php-fpm:
     build:
       context: ./api/docker
-      dockerfile: ./php-fpm/Dockerfile
+      dockerfile: development/php-fpm/Dockerfile
     environment:
       APP_DEBUG: 1
       APP_ENV: dev
@@ -47,7 +48,7 @@ services:
   api-php-cli:
     build:
       context: ./api/docker
-      dockerfile: ./php-cli/Dockerfile
+      dockerfile: development/php-cli/Dockerfile
     environment:
       APP_DEBUG: 1
       APP_ENV: dev
@@ -71,7 +72,8 @@ services:
 
   api-postgres:
     build:
-      context: ./api/docker/postgres
+      context: ./api/docker
+      dockerfile: development/postgres/Dockerfile
     ports:
       - "54321:5432"
     environment:
@@ -79,14 +81,15 @@ services:
       POSTGRES_USER: "nana"
       POSTGRES_DB: "app"
     volumes:
-      - ./api/docker/postgres/data:/var/lib/postgresql/data
+      - ./api/docker/development/postgres/data:/var/lib/postgresql/data
     depends_on:
       - api
 
-  #  frontend
+    #  frontend
   frontend:
     build:
-      context: ./frontend/docker/nginx
+      context: ./frontend/docker
+      dockerfile: development/nginx/Dockerfile
     volumes:
       - ./frontend:/app/
     depends_on:
@@ -95,14 +98,14 @@ services:
 
   frontend-node-cli:
     build:
-      context: ./frontend/docker/node
+      context: ./frontend/docker/development/node
     volumes:
       - ./frontend:/app
 
   # 3000 port, see gateway
   frontend-node-server:
     build:
-      context: ./frontend/docker/node
+      context: ./frontend/docker/development/node
     volumes:
       - ./frontend:/app
 

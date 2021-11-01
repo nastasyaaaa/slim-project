@@ -1,0 +1,21 @@
+POST localhost:8083/v1/auth/join
+
+###
+POST localhost:8083/v1/auth/join
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email" : "new-user",
+    "password": ""
+}
+###
+POST localhost:8083/v1/auth/join
+Accept: application/json
+Content-Type: application/json
+Accept-Language: es;q=0.6, ru;q=0.3, *;q=0.1
+
+{
+    "email" : "new-user",
+    "password": ""
+}
