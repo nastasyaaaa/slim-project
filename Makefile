@@ -89,6 +89,10 @@ frontend-ready:
 frontend-clear:
 	docker-compose run --rm frontend-node-cli rm -rf .ready build
 
+# jenkins
+validate-jenkins:
+	curl -u ${USER} -X POST -F "jenkinsfile=<Jenkinsfile" ${HOST}/pipeline-model-converter/validate
+
 deploy:
 	ssh deploy@${PROD_HOST} -p ${PROD_SSH_PORT} 'rm -rf site_${BUILD_NUMBER}'
 	ssh deploy@${PROD_HOST} -p ${PROD_SSH_PORT} 'mkdir site_${BUILD_NUMBER}'
