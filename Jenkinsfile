@@ -24,7 +24,26 @@ pipeline {
                         sh "sleep 1"
                     }
                 }
-                stage("Front End") {
+                stage("FrontEnd") {
+                    steps {
+                        sh "sleep 1"
+                    }
+                }
+            }
+        }
+        stage("Analyze") {
+            steps {
+                sh "sleep 1"
+            }
+        }
+        stage("Test") {
+            parallel {
+                stage("API") {
+                    steps {
+                        sh "make api-test"
+                    }
+                }
+                stage("FrontEnd") {
                     steps {
                         sh "sleep 1"
                     }
