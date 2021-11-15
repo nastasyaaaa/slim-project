@@ -58,14 +58,14 @@ pipeline {
                 sh "make down"
             }
         }
-        stage("Build") {
+        stage("Build Production Images") {
             steps {
                 sh "make build"
             }
         }
        stage("Testing") {
            stages {
-               stage("Build") {
+               stage("Build Testing Images") {
                     steps {
                         sh "make testing-build"
                     }
