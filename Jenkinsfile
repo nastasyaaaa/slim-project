@@ -20,25 +20,25 @@ pipeline {
                 sh "make validate-schema"
             }
         }
-        stage("Lint") {
-            parallel {
-                stage("API") {
-                    steps {
-                        sh "sleep 1"
-                    }
-                }
-                stage("FrontEnd") {
-                    steps {
-                        sh "sleep 1"
-                    }
-                }
-            }
-        }
-        stage("Analyze") {
-            steps {
-                sh "sleep 1"
-            }
-        }
+//         stage("Lint") {
+//             parallel {
+//                 stage("API") {
+//                     steps {
+//                         sh "sleep 1"
+//                     }
+//                 }
+//                 stage("FrontEnd") {
+//                     steps {
+//                         sh "sleep 1"
+//                     }
+//                 }
+//             }
+//         }
+//         stage("Analyze") {
+//             steps {
+//                 sh "sleep 1"
+//             }
+//         }
         stage("Test") {
             parallel {
                 stage("API") {
@@ -46,11 +46,11 @@ pipeline {
                         sh "make api-test"
                     }
                 }
-                stage("FrontEnd") {
-                    steps {
-                        sh "sleep 1"
-                    }
-                }
+//                 stage("FrontEnd") {
+//                     steps {
+//                         sh "sleep 1"
+//                     }
+//                 }
             }
         }
         stage("Down") {
@@ -75,16 +75,16 @@ pipeline {
                         sh "make testing-init"
                     }
                }
-                stage("Smoke") {
-                    steps {
-                        sh "sleep 1"
-                    }
-                }
-                stage("E2E") {
-                    steps {
-                        sh "sleep 1"
-                    }
-                }
+//                 stage("Smoke") {
+//                     steps {
+//                         sh "sleep 1"
+//                     }
+//                 }
+//                 stage("E2E") {
+//                     steps {
+//                         sh "sleep 1"
+//                     }
+//                 }
                 stage("Down") {
                     steps {
                         sh "make testing-down-clear"
