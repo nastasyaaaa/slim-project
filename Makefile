@@ -29,17 +29,29 @@ api-wait-db:
 api-validate-schema:
 	docker-compose run --rm api-php-cli composer console orm:validate-schema
 
-build: build-gateway build-api build-frontend
+build-buildx: build-gateway-buildx build-api-buildx build-frontend-buildx
 
-build-gateway:
+build-gateway-buildx:
 	docker --log-level=debug buildx build --platform linux/x86_64 --pull --file=gateway/docker/production/nginx/Dockerfile --tag=${REGISTRY}/auction-gateway:${IMAGE_TAG} gateway/docker
-build-api:
+build-api-buildx:
 	docker --log-level=debug buildx build --platform linux/x86_64 --pull --file=api/docker/production/nginx/Dockerfile --tag=${REGISTRY}/auction-api:${IMAGE_TAG} api
 	docker --log-level=debug buildx build --platform linux/x86_64 --pull --file=api/docker/production/php-fpm/Dockerfile --tag=${REGISTRY}/auction-api-php-fpm:${IMAGE_TAG} api
 	docker --log-level=debug buildx build --platform linux/x86_64 --pull --file=api/docker/production/php-cli/Dockerfile --tag=${REGISTRY}/auction-api-php-cli:${IMAGE_TAG} api
 	docker --log-level=debug buildx build --platform linux/x86_64 --pull --file=api/docker/production/postgres/Dockerfile --tag=${REGISTRY}/auction-api-postgres:${IMAGE_TAG} api
-build-frontend:
+build-frontend-buildx:
 	docker --log-level=debug buildx build --platform linux/x86_64 --pull --file=frontend/docker/production/nginx/Dockerfile --tag=${REGISTRY}/auction-frontend:${IMAGE_TAG} frontend
+
+build: build-gateway build-api build-frontend
+
+build-gateway:
+	docker --log-level=debug build --pull --file=gateway/docker/production/nginx/Dockerfile --tag=${REGISTRY}/auction-gateway:${IMAGE_TAG} gateway/docker
+build-api:
+	docker --log-level=debug build --pull --file=api/docker/production/nginx/Dockerfile --tag=${REGISTRY}/auction-api:${IMAGE_TAG} api
+	docker --log-level=debug build --pull --file=api/docker/production/php-fpm/Dockerfile --tag=${REGISTRY}/auction-api-php-fpm:${IMAGE_TAG} api
+	docker --log-level=debug build --pull --file=api/docker/production/php-cli/Dockerfile --tag=${REGISTRY}/auction-api-php-cli:${IMAGE_TAG} api
+	docker --log-level=debug build --pull --file=api/docker/production/postgres/Dockerfile --tag=${REGISTRY}/auction-api-postgres:${IMAGE_TAG} api
+build-frontend:
+	docker --log-level=debug build --pull --file=frontend/docker/production/nginx/Dockerfile --tag=${REGISTRY}/auction-frontend:${IMAGE_TAG} frontend
 
 try-build:
 	REGISTRY=localhost IMAGE_TAG=0 make build
