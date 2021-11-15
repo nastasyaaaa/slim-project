@@ -19,7 +19,7 @@ RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 
 # copy local php config to container config
 COPY ./docker/production/php/conf.d /usr/local/etc/php/conf.d
-COPY ./docker/production/php-cli/conf.d /usr/local/etc/php/conf.d
+#COPY ./docker/production/php-cli/conf.d /usr/local/etc/php/conf.d
 
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer --quiet
