@@ -63,10 +63,40 @@ pipeline {
                 sh "make build"
             }
         }
+       stage("Testing") {
+           stages {
+               stage("Build") {
+                    steps {
+                        sh "make testing-build"
+                    }
+               }
+               stage("Init") {
+                    steps {
+                        sh "make testing-init"
+                    }
+               }
+                stage("Smoke") {
+                    steps {
+                        sh "sleep 1"
+                    }
+                }
+                stage("E2E") {
+                    steps {
+                        sh "sleep 1"
+                    }
+                }
+                stage("Down") {
+                    steps {
+                        sh "make testing-down-clear"
+                    }
+                }
+           }
+       }
     }
     post {
         always {
             sh "make down || true"
+            sh "make testing-down-clear || true"
         }
     }
 }

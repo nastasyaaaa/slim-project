@@ -1,0 +1,72 @@
+version: "3.7"
+services:
+
+  gateway:
+    image: ${REGISTRY}/auction-testing-gateway:${IMAGE_TAG}
+    restart: always
+    depends_on:
+      - frontend
+      - api
+
+  # api
+  api:
+    image: ${REGISTRY}/auction-api:${IMAGE_TAG}
+    restart: always
+    depends_on:
+      - api-php-fpm
+
+  api-php-fpm:
+    image: ${REGISTRY}/auction-api-php-fpm:${IMAGE_TAG}
+    restart: always
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: 0
+      DB_HOST: "api-postgres"
+      DB_USER: "nana"
+      DB_PASSWORD: "123456"
+      DB_NAME: "app"
+      MAILER_HOST: "mailer"
+      MAILER_PORT: 1025
+      MAILER_USERNAME: "app"
+      MAILER_PASSWORD: "secret"
+      MAILER_ENCRYPTION: "tcp"
+      MAILER_FROM_EMAIL: "mail@app.test"
+
+
+  api-php-cli:
+    image: ${REGISTRY}/auction-api-php-cli:${IMAGE_TAG}
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: 0
+      DB_HOST: "api-postgres"
+      DB_USER: "nana"
+      DB_PASSWORD: "123456"
+      DB_NAME: "app"
+      MAILER_HOST: "mailer"
+      MAILER_PORT: 1025
+      MAILER_USERNAME: "app"
+      MAILER_PASSWORD: "secret"
+      MAILER_ENCRYPTION: "tcp"
+      MAILER_FROM_EMAIL: "mail@app.test"
+
+  api-postgres:
+    image: ${REGISTRY}/auction-api-postgres:${IMAGE_TAG}
+    environment:
+      POSTGRES_PASSWORD: "123456"
+      POSTGRES_USER: "nana"
+      POSTGRES_DB: "app"
+
+    ports:
+      - "5432:5432"
+    depends_on:
+      - api
+
+    #  frontend
+
+  frontend:
+    image: ${REGISTRY}/auction-frontend:${IMAGE_TAG}
+    restart: always
+
+  # services
+  mailer:
+    image: mailhog/mailhog

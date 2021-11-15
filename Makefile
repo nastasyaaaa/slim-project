@@ -29,6 +29,7 @@ api-wait-db:
 api-validate-schema:
 	docker-compose run --rm api-php-cli composer console orm:validate-schema
 
+# production
 build-buildx: build-gateway-buildx build-api-buildx build-frontend-buildx
 
 build-gateway-buildx:
@@ -67,6 +68,34 @@ push-api:
 	docker push ${REGISTRY}/auction-api-postgres:${IMAGE_TAG}
 push-frontend:
 	docker push ${REGISTRY}/auction-frontend:${IMAGE_TAG}
+
+# Testing environment
+testing-build-buildx: testing-build-gateway-buildx
+testing-build: testing-build-gateway
+try-testing: try-build try-testing-build try-testing-init try-testing-down-clear
+
+testing-build-gateway-buildx:
+	docker --log-level=debug buildx build --platform linux/x86_64 --pull --file=gateway/docker/testing/nginx/Dockerfile --tag=${REGISTRY}/auction-testing-gateway:${IMAGE_TAG} gateway/docker
+testing-build-gateway:
+	docker --log-level=debug build --pull --file=gateway/docker/testing/nginx/Dockerfile --tag=${REGISTRY}/auction-testing-gateway:${IMAGE_TAG} gateway/docker
+
+testing-init:
+	COMPOSE_PROJECT_NAME=testing docker-compose -f docker-compose-testing.yaml up --build -d
+	COMPOSE_PROJECT_NAME=testing docker-compose -f docker-compose-testing.yaml run --rm api-php-cli wait-for-it api-postgres:5432 -t 60
+	COMPOSE_PROJECT_NAME=testing docker-compose -f docker-compose-testing.yaml run --rm api-php-cli composer console migrations:migrate -- --no-interaction
+	COMPOSE_PROJECT_NAME=testing docker-compose -f docker-compose-testing.yaml run --rm api-php-cli composer console fixtures:load -- --no-interaction
+
+testing-down-clear:
+	COMPOSE_PROJECT_NAME=testing docker-compose -f docker-compose-testing.yaml down --remove-orphans
+
+try-testing-build:
+	REGISTRY=localhost IMAGE_TAG=0 make testing-build-buildx
+
+try-testing-init:
+	REGISTRY=localhost IMAGE_TAG=0 make testing-init
+
+try-testing-down-clear:
+	REGISTRY=localhost IMAGE_TAG=0 make testing-down-clear
 
 # Tests
 test: api-test api-fixtures
