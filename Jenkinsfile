@@ -5,6 +5,8 @@ pipeline {
     }
     environment {
         CI = 'true'
+        REGISTRY = credentials('REGISTRY')
+        IMAGE_TAG = sh(returnStdOut: true, script: "echo '${env.BUILD_TAG}' | sed 's/%2F/-/g'").trim()
     }
     stages {
         stage("Init") {
@@ -53,6 +55,11 @@ pipeline {
         stage("Down") {
             steps {
                 sh "make down"
+            }
+        }
+        stage("Build") {
+            steps {
+                sh "make build"
             }
         }
     }
