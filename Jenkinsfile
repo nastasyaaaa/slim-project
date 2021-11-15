@@ -92,6 +92,24 @@ pipeline {
                 }
            }
        }
+       stage("Push Production Images") {
+            when {
+                branch 'master'
+            }
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'REGISTRY_AUTH',
+                        usernameVariable: 'USER',
+                        passwordVariable: 'PASSWORD'
+                    )
+                ]) {
+                    sh "docker login -u='$USER' -p='$PASSWORD' $REGISTRY"
+                }
+
+                sh "make push"
+            }
+       }
     }
     post {
         always {
