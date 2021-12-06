@@ -1,32 +1,21 @@
 <?php
 
-use Psr\Container\ContainerInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Console\Commands\MailerCheckCommand;
-use App\Console\Commands\FixturesLoadCommand;
+use Doctrine\Migrations;
+use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 
 return [
-    FixturesLoadCommand::class => static function (ContainerInterface $container) {
-        /** @var EntityManagerInterface $em */
-        $em = $container->get(EntityManagerInterface::class);
-
-        $paths = $container->get('config')['console']['fixtures_paths'];
-
-        return new FixturesLoadCommand($em, $paths);
-    },
-
-
     'config' => [
-        'console' =>
-            [
-                'commands' => [
-                    FixturesLoadCommand::class,
-                    MailerCheckCommand::class,
-                ],
+        'console' => [
+            'commands' => [
+                ValidateSchemaCommand::class,
 
-                'fixtures_paths' => [
-                    __DIR__ . '/../../src/Auth/Fixture'
-                ]
-            ],
-    ],
+                Migrations\Tools\Console\Command\ExecuteCommand::class,
+                Migrations\Tools\Console\Command\MigrateCommand::class,
+                Migrations\Tools\Console\Command\LatestCommand::class,
+                Migrations\Tools\Console\Command\ListCommand::class,
+                Migrations\Tools\Console\Command\StatusCommand::class,
+                Migrations\Tools\Console\Command\UpToDateCommand::class,
+            ]
+        ]
+    ]
 ];

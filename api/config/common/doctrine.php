@@ -3,6 +3,7 @@
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
+use Doctrine\Common\EventManager;
 use Doctrine\Common\Cache\ArrayCache;
 use Psr\Container\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,8 +33,15 @@ return [
             }
         }
 
+        $eventManager = new EventManager();
 
-        return EntityManager::create($settings['connection'] ?? [], $config);
+        foreach($settings['subscribers'] as $name) {
+            /** @var \Doctrine\Common\EventSubscriber $subscriber */
+            $subscriber = $container->get($name);
+            $eventManager->addEventSubscriber($subscriber);
+        }
+
+        return EntityManager::create($settings['connection'] ?? [], $config, $eventManager);
     },
     'config' => [
         'doctrine' => [
@@ -57,7 +65,8 @@ return [
                 \App\Auth\Entity\User\Types\RoleType::NAME => \App\Auth\Entity\User\Types\RoleType::class,
                 \App\Auth\Entity\User\Types\StatusType::NAME => \App\Auth\Entity\User\Types\StatusType::class,
                 \App\Auth\Entity\User\Types\EmailType::NAME => \App\Auth\Entity\User\Types\EmailType::class,
-            ]
+            ],
+            'subscribers' => [],
         ]
     ]
 ];
