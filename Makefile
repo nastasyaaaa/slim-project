@@ -1,7 +1,7 @@
 init: down \
-	api-clear frontend-clear \
+	api-clear frontend-clear cucumber-clear \
 	docker-build up \
-	api-init frontend-init
+	api-init frontend-init cucumber-init
 up:
 	docker-compose up -d
 up-not-demon:
@@ -101,6 +101,13 @@ try-testing-down-clear:
 test: api-test api-fixtures
 test-functional: api-test-functional api-fixtures
 test-unit: api-test-unit
+test-smoke: api-fixtures cucumber-clear cucumber-smoke
+test-e2e:
+	make api-fixtures
+	make cucumber-clear
+	# ignore errors, see makefile specification
+	- make cucumber-e2e
+	make cucumber-report
 
 api-test:
 	docker-compose run --rm api-php-cli composer test
@@ -113,6 +120,15 @@ api-test-unit-coverage:
 api-test-functional-coverage:
 	 docker-compose run --rm api-php-cli composer test -- --filter=Functional --coverage-html var/coverage
 
+# Cucumber
+cucumber-e2e:
+	docker-compose run --rm cucumber-node-cli yarn e2e
+cucumber-smoke:
+	docker-compose run --rm cucumber-node-cli yarn smoke
+cucumber-clear:
+	docker run --rm -v ${PWD}/cucumber:/app -w /app alpine sh -c 'rm -rf var/*'
+cucumber-report:
+	docker-compose run --rm cucumber-node-cli yarn report
 
 # Migrations
 api-migration-diff:
@@ -137,6 +153,12 @@ frontend-clear:
 # jenkins
 validate-jenkins:
 	curl -u ${USER} -X POST -F "jenkinsfile=<Jenkinsfile" ${HOST}/pipeline-model-converter/validate
+
+# cucumber:
+cucumber-init: cucumber-yarn-install
+
+cucumber-yarn-install:
+	docker-compose run --rm cucumber-node-cli yarn install
 
 deploy:
 	ssh deploy@${PROD_HOST} -p ${PROD_SSH_PORT} 'rm -rf site_${BUILD_NUMBER}'
