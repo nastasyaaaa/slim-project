@@ -116,5 +116,12 @@ pipeline {
             sh "make down || true"
             sh "make testing-down-clear || true"
         }
+        failure {
+            emailext(
+                subject: "FAIL Job ${env.JOB_NAME} ${env.BUILD_NUMBER}",
+                body: "Check console output at: ${env.BUILD_URL}console",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+            )
+        }
     }
 }

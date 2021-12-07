@@ -57,6 +57,7 @@ build-frontend:
 try-build:
 	REGISTRY=localhost IMAGE_TAG=0 make build
 
+# Push production images to registry
 push: push-gateway push-api push-frontend
 
 push-gateway:
