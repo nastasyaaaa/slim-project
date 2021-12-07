@@ -6,7 +6,10 @@ Before(async function () {
         args: [
             '--disable-dev-shm-usage',
             '--no-sandbox',
-        ]
+        ],
+        headless: true,
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+        timeout: "30000"
     });
     this.page = await this.browser.newPage();
     await this.page.setViewport({width: 1280, height: 720});

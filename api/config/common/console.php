@@ -1,9 +1,17 @@
 <?php
 
 use Doctrine\Migrations;
+use Psr\Container\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 
 return [
+    \App\Console\Commands\FixturesLoadCommand::class => static function (ContainerInterface $container) {
+        $em = $container->get(EntityManagerInterface::class);
+        $paths = $container->get('config')['console']['fixtures_paths'] ?? [];
+
+        return new \App\Console\Commands\FixturesLoadCommand($em, $paths);
+    },
     'config' => [
         'console' => [
             'commands' => [

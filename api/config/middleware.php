@@ -10,6 +10,7 @@ use App\Http\Middleware\TranslationLocaleMiddleware;
 use App\Http\Middleware\DomainExceptionHandlerMiddleware;
 
 return static function (App $app, Container $container) {
+    // push to stack
     $app->add(DomainExceptionHandlerMiddleware::class);
     $app->add(ValidationExceptionHandler::class);
     $app->add(ClearEmptyInputMiddleware::class);

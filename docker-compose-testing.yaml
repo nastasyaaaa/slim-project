@@ -49,6 +49,22 @@ services:
       MAILER_ENCRYPTION: "tcp"
       MAILER_FROM_EMAIL: "mail@app.test"
 
+  testing-api-php-cli:
+    image: ${REGISTRY}/auction-testing-api-php-cli:${IMAGE_TAG}
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: 1
+      DB_HOST: "api-postgres"
+      DB_USER: "nana"
+      DB_PASSWORD: "123456"
+      DB_NAME: "app"
+      MAILER_HOST: "mailer"
+      MAILER_PORT: 1025
+      MAILER_USERNAME: "app"
+      MAILER_PASSWORD: "secret"
+      MAILER_ENCRYPTION: "tcp"
+      MAILER_FROM_EMAIL: "mail@app.test"
+
   api-postgres:
     image: ${REGISTRY}/auction-api-postgres:${IMAGE_TAG}
     environment:
@@ -70,3 +86,7 @@ services:
   # services
   mailer:
     image: mailhog/mailhog
+
+  # cucumber
+  cucumber-node-cli:
+    image: ${REGISTRY}/auction-testing-cucumber-node-cli:${IMAGE_TAG}
