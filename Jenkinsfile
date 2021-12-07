@@ -75,21 +75,21 @@ pipeline {
                         sh "make testing-init"
                     }
                }
-//                 stage("Smoke") {
-//                     steps {
-//                         sh "sleep 1"
-//                     }
-//                 }
-//                 stage("E2E") {
-//                     steps {
-//                         sh "sleep 1"
-//                     }
-//                 }
-                stage("Down") {
+               stage("Smoke") {
+                    steps {
+                        sh "make test-smoke"
+                    }
+               }
+               stage("E2E") {
+                    steps {
+                        sh "make test-e2e"
+                    }
+               }
+               stage("Down") {
                     steps {
                         sh "make testing-down-clear"
                     }
-                }
+               }
            }
        }
        stage("Push Production Images") {
