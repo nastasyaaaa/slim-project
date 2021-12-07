@@ -77,12 +77,12 @@ pipeline {
                }
                stage("Smoke") {
                     steps {
-                        sh "make test-smoke"
+                        sh "make testing-smoke"
                     }
                }
                stage("E2E") {
                     steps {
-                        sh "make test-e2e"
+                        sh "make testing-e2e"
                     }
                }
                stage("Down") {
