@@ -30,7 +30,7 @@ RUN chmod 555 /usr/local/bin/wait-for-it
 
 # add user
 RUN adduser -D -u 1000 nana
-USER nana
+# USER nana
 
 WORKDIR /app
 
