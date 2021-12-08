@@ -1,7 +1,7 @@
 init: down \
 	api-clear frontend-clear cucumber-clear \
 	docker-build up \
-	frontend-init cucumber-init
+	api-init frontend-init cucumber-init
 up:
 	docker-compose up -d
 up-not-demon:
