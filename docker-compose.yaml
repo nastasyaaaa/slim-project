@@ -6,6 +6,8 @@ services:
     build:
       context: ./gateway/docker
       dockerfile: development/nginx/Dockerfile
+      cache_from:
+        - ${REGISTRY:-localhost}/gateway:cache
     ports:
       - "8082:8082"
       - "8083:8083"
@@ -21,6 +23,8 @@ services:
     build:
       context: ./api/docker
       dockerfile: development/nginx/Dockerfile
+      cache_from:
+        - ${REGISTRY:-localhost}/api:cache
     volumes:
       - ./api:/app/
     depends_on:
@@ -31,6 +35,8 @@ services:
     build:
       context: ./api/docker
       dockerfile: development/php-fpm/Dockerfile
+      cache_from:
+        - ${REGISTRY:-localhost}/api-php-fpm:cache
     environment:
       APP_DEBUG: 1
       APP_ENV: dev
@@ -53,6 +59,8 @@ services:
     build:
       context: ./api/docker
       dockerfile: development/php-cli/Dockerfile
+      cache_from:
+        - ${REGISTRY:-localhost}/api-php-cli:cache
     environment:
       APP_DEBUG: 1
       APP_ENV: dev
@@ -79,6 +87,8 @@ services:
     build:
       context: ./api/docker
       dockerfile: development/postgres/Dockerfile
+      cache_from:
+        - ${REGISTRY:-localhost}/api-postgres:cache
     ports:
       - "54321:5432"
     environment:
@@ -96,6 +106,8 @@ services:
     build:
       context: ./frontend/docker
       dockerfile: development/nginx/Dockerfile
+      cache_from:
+        - ${REGISTRY:-localhost}/frontend:cache
     volumes:
       - ./frontend:/app/
     depends_on:
@@ -106,6 +118,8 @@ services:
     image: ${REGISTRY:-localhost}/frontend-node-cli:cache
     build:
       context: ./frontend/docker/development/node
+      cache_from:
+        - ${REGISTRY:-localhost}/frontend-node-cli:cache
     volumes:
       - ./frontend:/app
 
@@ -114,6 +128,8 @@ services:
     image: ${REGISTRY:-localhost}/frontend-node-server:cache
     build:
       context: ./frontend/docker/development/node
+      cache_from:
+        - ${REGISTRY:-localhost}/frontend-node-server:cache
     volumes:
       - ./frontend:/app
 
@@ -130,6 +146,8 @@ services:
     image: ${REGISTRY:-localhost}/cucumber-node-cli:cache
     build:
       context: ./cucumber/docker/development/node
+      cache_from:
+        - ${REGISTRY:-localhost}/cucumber-node-cli:cache
     volumes:
       - ./cucumber:/app
 
