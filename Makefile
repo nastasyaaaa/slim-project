@@ -1,6 +1,6 @@
 init: down \
 	api-clear frontend-clear cucumber-clear \
-	docker-build up \
+	docker-pull docker-build up \
 	api-init frontend-init cucumber-init
 up:
 	docker-compose up -d
@@ -8,8 +8,10 @@ up-not-demon:
 	docker-compose up
 down:
 	docker-compose down --remove-orphans
+docker-pull:
+	docker-compose pull
 docker-build:
-	DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker-compose build --pull
+	DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1 --pull
 push-dev-cache:
 	docker-compose push
 
