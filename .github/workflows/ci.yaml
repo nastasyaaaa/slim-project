@@ -4,30 +4,45 @@ on:
   push:
     branches:
       - master
+
+env:
+  REGISTRY_HOST: ${{ secrets.REGISTRY }}
+  REGISTRY: ${{ secrets.REGISTRY }}/${{ github.repository_owner }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      -   uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      -   name: Cache api vendor
-          uses: actions/cache@v2
-          with:
-            path: api/vendor
-            key: api-composer-${{ hashFiles('api/composer.lock') }}
+      - name: Cache api vendor
+        uses: actions/cache@v2
+        with:
+          path: api/vendor
+          key: api-composer-${{ hashFiles('api/composer.lock') }}
 
-      -   name: Cache frontend node modules
-          uses: actions/cache@v2
-          with:
-            path: frontend/node_modules
-            key: frontend-node-modules-${{ hashFiles('frontend/yarn.lock') }}
+      - name: Cache frontend node modules
+        uses: actions/cache@v2
+        with:
+          path: frontend/node_modules
+          key: frontend-node-modules-${{ hashFiles('frontend/yarn.lock') }}
 
-      -   name: Cache cucumber node modules
-          uses: actions/cache@v2
-          with:
-            path: cucumber/node_modules
-            key: cocomber-node-modules-${{ hashFiles('cucumber/yarn.lock') }}
+      - name: Cache cucumber node modules
+        uses: actions/cache@v2
+        with:
+          path: cucumber/node_modules
+          key: cocomber-node-modules-${{ hashFiles('cucumber/yarn.lock') }}
 
-      -   name: Dev init
-          run: make init
+      - name: Login to GitHub Container Registry (Packages)
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY_HOST }}
+          username: ${{ github.author }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Dev init
+        run: make init
+
+      - name: Push dev cached images to Github Container Registry
+        run: make push-dev-cache

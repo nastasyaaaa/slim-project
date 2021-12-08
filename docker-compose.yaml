@@ -2,6 +2,7 @@ version: "3.3"
 services:
 
   gateway:
+    image: ${REGISTRY:-localhost}/gateway:cache
     build:
       context: ./gateway/docker
       dockerfile: development/nginx/Dockerfile
@@ -16,6 +17,7 @@ services:
 
   # api
   api:
+    image: ${REGISTRY:-localhost}/api:cache
     build:
       context: ./api/docker
       dockerfile: development/nginx/Dockerfile
@@ -25,6 +27,7 @@ services:
       - api-php-fpm
 
   api-php-fpm:
+    image: ${REGISTRY:-localhost}/api-php-fpm:cache
     build:
       context: ./api/docker
       dockerfile: development/php-fpm/Dockerfile
@@ -46,6 +49,7 @@ services:
       - ./api:/app/
 
   api-php-cli:
+    image: ${REGISTRY:-localhost}/api-php-cli:cache
     build:
       context: ./api/docker
       dockerfile: development/php-cli/Dockerfile
@@ -71,6 +75,7 @@ services:
       - ./api:/app/
 
   api-postgres:
+    image: ${REGISTRY:-localhost}/api-postgres:cache
     build:
       context: ./api/docker
       dockerfile: development/postgres/Dockerfile
@@ -87,6 +92,7 @@ services:
 
     #  frontend
   frontend:
+    image: ${REGISTRY:-localhost}/frontend:cache
     build:
       context: ./frontend/docker
       dockerfile: development/nginx/Dockerfile
@@ -97,6 +103,7 @@ services:
       - frontend-node-server
 
   frontend-node-cli:
+    image: ${REGISTRY:-localhost}/frontend-node-cli:cache
     build:
       context: ./frontend/docker/development/node
     volumes:
@@ -104,6 +111,7 @@ services:
 
   # 3000 port, see gateway
   frontend-node-server:
+    image: ${REGISTRY:-localhost}/frontend-node-server:cache
     build:
       context: ./frontend/docker/development/node
     volumes:
@@ -119,6 +127,7 @@ services:
 
   # cucumber
   cucumber-node-cli:
+    image: ${REGISTRY:-localhost}/cucumber-node-cli:cache
     build:
       context: ./cucumber/docker/development/node
     volumes:

@@ -9,7 +9,9 @@ up-not-demon:
 down:
 	docker-compose down --remove-orphans
 docker-build:
-	docker-compose build --pull
+	DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD= 1 docker-compose build --pull
+push-dev-cache:
+	docker-compose push
 
 api-init: api-permissions api-composer-install api-wait-db api-migration-migrate api-fixtures
 validate-schema: api-validate-schema
