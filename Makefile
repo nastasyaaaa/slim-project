@@ -9,7 +9,7 @@ up-not-demon:
 down:
 	docker-compose down --remove-orphans
 docker-build:
-	DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD= 1 docker-compose build --pull
+	DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker-compose build --pull
 push-dev-cache:
 	docker-compose push
 
